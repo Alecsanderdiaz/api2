@@ -1,12 +1,19 @@
-const express = require('express')
-const app = express()
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-var port = process.env.PORT || 3001
+const config = require('./config/config');
 
-app.get('/', function (req, res) {
-  res.send('Hola Heroku')
-})
+const configureMongoose = require('./config/mongoose');
+const configureExpress = require('./config/express');
+//const configurePassport = require('./config/passport');
 
-app.listen(port, function () {
-  console.log('Example app listening on port 3000!')
-})
+const db = configureMongoose();
+
+const app = configureExpress();
+
+//const passport = configurePassport();
+
+app.listen(config.port);
+
+console.log(`Server running at http://localhost:${config.port}/`);
+
+module.exports = app;
